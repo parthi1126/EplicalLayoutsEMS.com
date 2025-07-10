@@ -12,16 +12,27 @@ import pyotp
 import qrcode
 import base64
 from io import BytesIO
+import json
 # Initialize Flask app
 app = Flask(__name__)
-app.secret_key = 'your-secure-secret-key-here'
+app.secret_key = 'epical-layouts-muvi-2025'
 
 # Google Sheets Setup
-scope = ["https://spreadsheets.google.com/feeds", 
-         "https://www.googleapis.com/auth/drive",
-         "https://www.googleapis.com/auth/spreadsheets"]
-creds = ServiceAccountCredentials.from_json_keyfile_name("credentials.json", scope)
-client = gspread.authorize(creds)
+
+scope = [
+    "https://spreadsheets.google.com/feeds",
+    "https://www.googleapis.com/auth/drive",
+    "https://www.googleapis.com/auth/spreadsheets"
+]
+
+# Load Google Service Account JSON from environment variable (Render-compatible)
+credentials_json = os.environ.get("GOOGLE_SHEETS_CREDENTIALS_JSON")
+if credentials_json:
+    creds_dict = json.loads(credentials_json)
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+    client = gspread.authorize(creds)
+else:
+    raise Exception("Google credentials not found in environment variables")
 
 # Worksheet references
 sheet = client.open_by_key("1hyoQZpD17tsTjSh1XqgAUvfZ4Nt3kwV7zxphosruXeE").worksheet("Sheet1")
@@ -645,8 +656,13 @@ def payslipad():
 def payslip_upload():
     temp_path = None
     try:
-        creds = ServiceAccountCredentials.from_json_keyfile_name("credentials.json", scope)
-        drive_service = build('drive', 'v3', credentials=creds)
+        credentials_json = os.environ.get("GOOGLE_SHEETS_CREDENTIALS_JSON")
+        if credentials_json:
+            creds_dict = json.loads(credentials_json)
+            creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+            drive_service = build('drive', 'v3', credentials=creds)
+        else:
+            raise Exception("Google credentials not found for Drive API")
         
         employee_name = request.form.get('employee_name', '').strip()
         employee_id = request.form.get('employee_id', '').strip()
@@ -750,6 +766,3 @@ def payslip_archive(row_id):
 @login_required
 def profile():
     return render_template('profile.html')
-
-if __name__ == '__main__':
-    app.run(debug=True, port=2000)
