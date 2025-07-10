@@ -24,3 +24,5 @@ Thumbs.db
 
 # 🔧 VS Code settings (optional)
 .vscode/
+client_secrets.json
+temp_uploads/

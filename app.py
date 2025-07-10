@@ -1,3 +1,42 @@
+from authlib.integrations.flask_client import OAuth
+
+# Google OAuth2 config
+GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID")
+GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET")
+GOOGLE_DISCOVERY_URL = "https://accounts.google.com/.well-known/openid-configuration"
+
+oauth = OAuth(app)
+oauth.register(
+    name='google',
+    client_id=GOOGLE_CLIENT_ID,
+    client_secret=GOOGLE_CLIENT_SECRET,
+    server_metadata_url=GOOGLE_DISCOVERY_URL,
+    client_kwargs={
+        'scope': 'openid email profile'
+    }
+)
+
+# Google OAuth2 login route
+@app.route('/login/google')
+def login_google():
+    redirect_uri = url_for('oauth2callback', _external=True)
+    return oauth.google.authorize_redirect(redirect_uri)
+
+# OAuth2 callback route (token exchange and login)
+@app.route("/oauth2callback")
+def oauth2callback():
+    token = oauth.google.authorize_access_token()
+    userinfo = oauth.google.parse_id_token(token)
+    if userinfo:
+        session['email'] = userinfo.get('email')
+        session['fullname'] = userinfo.get('name')
+        session['role'] = 'employee'  # You can adjust role logic as needed
+        session['logged_in'] = True
+        flash('Logged in with Google!', 'success')
+        return redirect(url_for('empdashboard'))
+    else:
+        flash('Google login failed', 'danger')
+        return redirect(url_for('login'))
 from flask import Flask, render_template, url_for, request, redirect, flash, session, jsonify
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
