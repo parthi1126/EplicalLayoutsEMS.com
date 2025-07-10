@@ -14,6 +14,33 @@ scope = [
     "https://www.googleapis.com/auth/spreadsheets"
 ]
 
+def validate_credentials_dict(creds_dict):
+    """Validate the structure of the credentials dictionary"""
+    required_keys = {
+        'type': 'service_account',
+        'project_id': str,
+        'private_key_id': str,
+        'private_key': str,
+        'client_email': str,
+        'client_id': str,
+        'auth_uri': str,
+        'token_uri': str,
+        'auth_provider_x509_cert_url': str,
+        'client_x509_cert_url': str
+    }
+    
+    if not isinstance(creds_dict, dict):
+        raise ValueError("Credentials must be a dictionary")
+    
+    if creds_dict.get('type') != 'service_account':
+        raise ValueError("Credentials type must be 'service_account'")
+    
+    for key, expected_type in required_keys.items():
+        if key not in creds_dict:
+            raise ValueError(f"Missing required key: {key}")
+        if not isinstance(creds_dict[key], expected_type):
+            raise ValueError(f"Invalid type for {key}, expected {expected_type}")
+
 def load_google_credentials():
     credentials_json = os.environ.get("GOOGLE_SHEETS_CREDENTIALS_JSON")
     
@@ -22,16 +49,20 @@ def load_google_credentials():
     
     # Try direct JSON parsing first
     try:
-        return json.loads(credentials_json)
-    except json.JSONDecodeError:
-        pass
+        creds_dict = json.loads(credentials_json)
+        validate_credentials_dict(creds_dict)
+        return creds_dict
+    except (json.JSONDecodeError, ValueError) as e:
+        print(f"Direct JSON parse failed: {str(e)}")
     
     # Try cleaning the string (remove newlines, extra spaces)
     try:
-        cleaned = credentials_json.strip().replace('\n', '').replace(' ', '')
-        return json.loads(cleaned)
-    except json.JSONDecodeError:
-        pass
+        cleaned = ' '.join(credentials_json.strip().split())
+        creds_dict = json.loads(cleaned)
+        validate_credentials_dict(creds_dict)
+        return creds_dict
+    except (json.JSONDecodeError, ValueError) as e:
+        print(f"Cleaned JSON parse failed: {str(e)}")
     
     # Try base64 decoding
     try:
@@ -40,25 +71,31 @@ def load_google_credentials():
         if padding:
             credentials_json += '=' * (4 - padding)
         decoded = base64.b64decode(credentials_json).decode('utf-8')
-        return json.loads(decoded)
+        creds_dict = json.loads(decoded)
+        validate_credentials_dict(creds_dict)
+        return creds_dict
     except Exception as e:
-        raise ValueError(f"Failed to parse credentials after multiple attempts: {str(e)}")
+        raise ValueError(f"Failed to parse valid credentials after multiple attempts: {str(e)}")
 
 try:
     print("Attempting to load Google credentials...")
     creds_dict = load_google_credentials()
-    print("Successfully parsed credentials")
+    print("Successfully parsed and validated credentials")
     
+    print("Initializing Google Sheets client...")
     creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
-    client = gspread.authorize(cres)
+    client = gspread.authorize(creds)
     print("Successfully authorized with Google Sheets API")
 
 except Exception as e:
     print(f"FATAL ERROR: {str(e)}")
-    # For production, you might want to implement a retry mechanism or graceful shutdown
+    print("Please verify your GOOGLE_SHEETS_CREDENTIALS_JSON environment variable")
+    print("It should contain either:")
+    print("1. The full contents of your service account JSON file, or")
+    print("2. A base64 encoded version of that file")
     raise
 
-# Rest of your application code remains exactly the same...
+# Rest of your application code...
 
 # Helper functions
 # Helper functions (unchanged)
