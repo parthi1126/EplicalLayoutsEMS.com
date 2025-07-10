@@ -14,6 +14,10 @@ from werkzeug.utils import secure_filename
 import pyotp
 import qrcode
 from authlib.integrations.flask_client import OAuth
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -27,14 +31,25 @@ scope = [
     "https://www.googleapis.com/auth/spreadsheets"
 ]
 
-# Load Google Service Account JSON from environment variable (Render-compatible)
-credentials_json = os.environ.get("GOOGLE_SHEETS_CREDENTIALS_JSON")
+# Load Google Service Account JSON from .env (GOOGLE_CREDENTIALS)
+credentials_json = os.environ.get("GOOGLE_CREDENTIALS")
 if credentials_json:
     creds_dict = json.loads(credentials_json)
     creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
     client = gspread.authorize(creds)
 else:
-    raise Exception("Google credentials not found in environment variables")
+    raise Exception("Google credentials not found in environment variables or .env")
+
+# Google OAuth2 config
+CLIENT_SECRETS = os.environ.get("CLIENT_SECRETS")
+if CLIENT_SECRETS:
+    client_secrets_dict = json.loads(CLIENT_SECRETS)
+    GOOGLE_CLIENT_ID = client_secrets_dict['web']['client_id']
+    GOOGLE_CLIENT_SECRET = client_secrets_dict['web']['client_secret']
+else:
+    GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID")
+    GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET")
+GOOGLE_DISCOVERY_URL = "https://accounts.google.com/.well-known/openid-configuration"
 
 # Worksheet references
 sheet = client.open_by_key("1hyoQZpD17tsTjSh1XqgAUvfZ4Nt3kwV7zxphosruXeE").worksheet("Sheet1")
