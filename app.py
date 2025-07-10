@@ -26,34 +26,45 @@ scope = [
     "https://www.googleapis.com/auth/spreadsheets"
 ]
 
-# Improved Google Service Account JSON loading with better error handling
+# Robust Google Service Account JSON loading
 def load_google_credentials():
     credentials_json = os.environ.get("GOOGLE_SHEETS_CREDENTIALS_JSON")
+    
     if not credentials_json:
         raise ValueError("GOOGLE_SHEETS_CREDENTIALS_JSON environment variable not set")
     
+    # First try to parse as direct JSON
     try:
-        # Try to parse the JSON directly
         creds_dict = json.loads(credentials_json)
-    except json.JSONDecodeError:
-        # If direct parsing fails, try base64 decoding first
-        try:
-            credentials_json = base64.b64decode(credentials_json).decode('utf-8')
-            creds_dict = json.loads(credentials_json)
-        except (base64.binascii.Error, UnicodeDecodeError, json.JSONDecodeError) as e:
-            raise ValueError(f"Failed to parse credentials: {str(e)}")
+        print("Successfully parsed credentials as direct JSON")
+        return ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+    except json.JSONDecodeError as e:
+        print(f"Not valid direct JSON, trying base64: {str(e)}")
+        pass
     
+    # If direct JSON fails, try base64 decoding
     try:
-        creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
-        return gspread.authorize(creds)
+        # Ensure proper padding for base64
+        credentials_json = credentials_json.strip()
+        padding = len(credentials_json) % 4
+        if padding:
+            credentials_json += '=' * (4 - padding)
+        
+        decoded = base64.b64decode(credentials_json).decode('utf-8')
+        creds_dict = json.loads(decoded)
+        print("Successfully decoded base64 credentials")
+        return ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
     except Exception as e:
-        raise ValueError(f"Failed to authorize with Google Sheets: {str(e)}")
+        raise ValueError(f"Failed to parse credentials (tried both direct JSON and base64): {str(e)}")
 
+# Initialize client with error handling
 try:
-    client = load_google_credentials()
+    creds = load_google_credentials()
+    client = gspread.authorize(creds)
+    print("Successfully authorized with Google Sheets API")
 except Exception as e:
-    print(f"FATAL ERROR: {str(e)}")
-    # You might want to handle this more gracefully in production
+    print(f"FATAL ERROR initializing Google Sheets client: {str(e)}")
+    # In production, you might want to handle this more gracefully
     raise
 
 # Worksheet references (unchanged)
@@ -72,6 +83,9 @@ UPLOAD_FOLDER = 'temp_uploads'
 ALLOWED_EXTENSIONS = {'pdf'}
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
+
+# [REST OF YOUR ORIGINAL CODE FOLLOWS EXACTLY AS IT WAS]
+# All your existing routes, helper functions, etc. remain unchanged
 
 # Helper functions
 # Helper functions (unchanged)
