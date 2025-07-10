@@ -20,23 +20,43 @@ app = Flask(__name__)
 app.secret_key = 'epical-layouts-muvi-2025'
 
 # Google Sheets Setup
-
 scope = [
     "https://spreadsheets.google.com/feeds",
     "https://www.googleapis.com/auth/drive",
     "https://www.googleapis.com/auth/spreadsheets"
 ]
 
-# Load Google Service Account JSON from environment variable (Render-compatible)
-credentials_json = os.environ.get("GOOGLE_SHEETS_CREDENTIALS_JSON")
-if credentials_json:
-    creds_dict = json.loads(credentials_json)
-    creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
-    client = gspread.authorize(creds)
-else:
-    raise Exception("Google credentials not found in environment variables")
+# Improved Google Service Account JSON loading with better error handling
+def load_google_credentials():
+    credentials_json = os.environ.get("GOOGLE_SHEETS_CREDENTIALS_JSON")
+    if not credentials_json:
+        raise ValueError("GOOGLE_SHEETS_CREDENTIALS_JSON environment variable not set")
+    
+    try:
+        # Try to parse the JSON directly
+        creds_dict = json.loads(credentials_json)
+    except json.JSONDecodeError:
+        # If direct parsing fails, try base64 decoding first
+        try:
+            credentials_json = base64.b64decode(credentials_json).decode('utf-8')
+            creds_dict = json.loads(credentials_json)
+        except (base64.binascii.Error, UnicodeDecodeError, json.JSONDecodeError) as e:
+            raise ValueError(f"Failed to parse credentials: {str(e)}")
+    
+    try:
+        creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+        return gspread.authorize(creds)
+    except Exception as e:
+        raise ValueError(f"Failed to authorize with Google Sheets: {str(e)}")
 
-# Worksheet references
+try:
+    client = load_google_credentials()
+except Exception as e:
+    print(f"FATAL ERROR: {str(e)}")
+    # You might want to handle this more gracefully in production
+    raise
+
+# Worksheet references (unchanged)
 sheet = client.open_by_key("1hyoQZpD17tsTjSh1XqgAUvfZ4Nt3kwV7zxphosruXeE").worksheet("Sheet1")
 sheet1 = client.open_by_key("1hyoQZpD17tsTjSh1XqgAUvfZ4Nt3kwV7zxphosruXeE").worksheet("leave")
 sheet2 = client.open_by_key("1hyoQZpD17tsTjSh1XqgAUvfZ4Nt3kwV7zxphosruXeE").worksheet("holiday")
@@ -46,7 +66,7 @@ sheet5 = client.open_by_key("1hyoQZpD17tsTjSh1XqgAUvfZ4Nt3kwV7zxphosruXeE").work
 sheet6 = client.open_by_key("1hyoQZpD17tsTjSh1XqgAUvfZ4Nt3kwV7zxphosruXeE").worksheet("holiday")
 payslip_sheet = client.open_by_key("1hyoQZpD17tsTjSh1XqgAUvfZ4Nt3kwV7zxphosruXeE").worksheet("payslip")
 
-# Payslip configuration
+# Payslip configuration (unchanged)
 DRIVE_FOLDER_ID = '1LxAduaN9nkj0lNLokC6fwn7Oe7fSXszD'
 UPLOAD_FOLDER = 'temp_uploads'
 ALLOWED_EXTENSIONS = {'pdf'}
@@ -54,6 +74,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
 # Helper functions
+# Helper functions (unchanged)
 def get_column_index(worksheet, header_name):
     try:
         headers = worksheet.row_values(1)
