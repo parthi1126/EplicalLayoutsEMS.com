@@ -15,46 +15,47 @@ scope = [
 ]
 
 def get_google_credentials():
-    """Load and validate Google credentials with comprehensive error handling"""
+    """Load Google credentials with comprehensive error handling"""
     credentials_json = os.environ.get("GOOGLE_SHEETS_CREDENTIALS_JSON")
     
     if not credentials_json:
         raise ValueError("GOOGLE_SHEETS_CREDENTIALS_JSON environment variable not set")
     
-    # Debug output - remove in production
-    print(f"Credentials length: {len(credentials_json)}")
-    print(f"First 50 chars: {credentials_json[:50]}")
-    print(f"Last 50 chars: {credentials_json[-50:]}")
+    # Remove any whitespace and newlines
+    credentials_json = credentials_json.strip()
     
-    # Try direct JSON parse
+    # First try direct JSON parsing
     try:
         creds = json.loads(credentials_json)
-        if creds.get('type') == 'service_account':
+        if isinstance(creds, dict) and creds.get('type') == 'service_account':
             return creds
+        raise ValueError("Credentials JSON missing 'type': 'service_account'")
     except json.JSONDecodeError:
-        pass
+        pass  # Not valid JSON, try base64
     
-    # Try base64 decode if direct JSON fails
+    # Try base64 decoding
     try:
-        # Proper base64 padding handling
+        # Add padding if needed
         padding = len(credentials_json) % 4
         if padding:
             credentials_json += '=' * (4 - padding)
         
-        decoded = base64.b64decode(credentials_json).decode('utf-8')
+        # First try UTF-8 decoding
+        try:
+            decoded = base64.b64decode(credentials_json).decode('utf-8')
+        except UnicodeDecodeError:
+            # If UTF-8 fails, try without decoding (raw bytes)
+            decoded = base64.b64decode(credentials_json)
+            if b'"type": "service_account"' not in decoded:
+                raise ValueError("Decoded credentials missing service_account type")
+            decoded = decoded.decode('utf-8', errors='ignore')
+        
         creds = json.loads(decoded)
         if creds.get('type') == 'service_account':
             return creds
+        raise ValueError("Decoded credentials missing 'type': 'service_account'")
     except Exception as e:
-        print(f"Base64 decode error: {str(e)}")
-    
-    # If we get here, all attempts failed
-    raise ValueError(
-        "Invalid credentials format. Must be either:\n"
-        "1. Direct JSON service account credentials, or\n"
-        "2. Base64 encoded version of those credentials\n"
-        "Ensure your credentials include 'type': 'service_account'"
-    )
+        raise ValueError(f"Failed to parse credentials: {str(e)}")
 
 # Initialize Google Sheets client
 try:
@@ -71,17 +72,20 @@ try:
     
 except Exception as e:
     print(f"FATAL ERROR: {str(e)}")
-    # In production, you might want to implement a retry mechanism
+    print("Please verify your GOOGLE_SHEETS_CREDENTIALS_JSON environment variable")
+    print("It should contain either:")
+    print("1. The exact contents of your service account JSON file, or")
+    print("2. A properly base64 encoded version of that file")
     raise
 
-# Debug endpoint to verify credentials
+# Debug endpoint
 @app.route('/verify-creds')
 def verify_creds():
     try:
         return jsonify({
             "status": "success",
-            "message": "Google Sheets authentication working",
-            "first_sheet_data": sheet.get_all_records()[0] if sheet else "No data"
+            "sheets_authenticated": True,
+            "first_sheet_title": sheet.title if sheet else None
         })
     except Exception as e:
         return jsonify({
@@ -89,7 +93,7 @@ def verify_creds():
             "message": str(e)
         }), 500
 
-# [Rest of your existing routes and functions remain exactly the same]
+# [Rest of your application code]
 
 # Helper functions
 # Helper functions (unchanged)
