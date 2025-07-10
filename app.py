@@ -3,7 +3,7 @@ import json
 import base64
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-from flask import Flask
+from flask import Flask, jsonify
 
 app = Flask(__name__)
 
@@ -14,88 +14,82 @@ scope = [
     "https://www.googleapis.com/auth/spreadsheets"
 ]
 
-def validate_credentials_dict(creds_dict):
-    """Validate the structure of the credentials dictionary"""
-    required_keys = {
-        'type': 'service_account',
-        'project_id': str,
-        'private_key_id': str,
-        'private_key': str,
-        'client_email': str,
-        'client_id': str,
-        'auth_uri': str,
-        'token_uri': str,
-        'auth_provider_x509_cert_url': str,
-        'client_x509_cert_url': str
-    }
-    
-    if not isinstance(creds_dict, dict):
-        raise ValueError("Credentials must be a dictionary")
-    
-    if creds_dict.get('type') != 'service_account':
-        raise ValueError("Credentials type must be 'service_account'")
-    
-    for key, expected_type in required_keys.items():
-        if key not in creds_dict:
-            raise ValueError(f"Missing required key: {key}")
-        if not isinstance(creds_dict[key], expected_type):
-            raise ValueError(f"Invalid type for {key}, expected {expected_type}")
-
-def load_google_credentials():
+def get_google_credentials():
+    """Load and validate Google credentials with comprehensive error handling"""
     credentials_json = os.environ.get("GOOGLE_SHEETS_CREDENTIALS_JSON")
     
     if not credentials_json:
         raise ValueError("GOOGLE_SHEETS_CREDENTIALS_JSON environment variable not set")
     
-    # Try direct JSON parsing first
-    try:
-        creds_dict = json.loads(credentials_json)
-        validate_credentials_dict(creds_dict)
-        return creds_dict
-    except (json.JSONDecodeError, ValueError) as e:
-        print(f"Direct JSON parse failed: {str(e)}")
+    # Debug output - remove in production
+    print(f"Credentials length: {len(credentials_json)}")
+    print(f"First 50 chars: {credentials_json[:50]}")
+    print(f"Last 50 chars: {credentials_json[-50:]}")
     
-    # Try cleaning the string (remove newlines, extra spaces)
+    # Try direct JSON parse
     try:
-        cleaned = ' '.join(credentials_json.strip().split())
-        creds_dict = json.loads(cleaned)
-        validate_credentials_dict(creds_dict)
-        return creds_dict
-    except (json.JSONDecodeError, ValueError) as e:
-        print(f"Cleaned JSON parse failed: {str(e)}")
+        creds = json.loads(credentials_json)
+        if creds.get('type') == 'service_account':
+            return creds
+    except json.JSONDecodeError:
+        pass
     
-    # Try base64 decoding
+    # Try base64 decode if direct JSON fails
     try:
-        # Add padding if needed
+        # Proper base64 padding handling
         padding = len(credentials_json) % 4
         if padding:
             credentials_json += '=' * (4 - padding)
+        
         decoded = base64.b64decode(credentials_json).decode('utf-8')
-        creds_dict = json.loads(decoded)
-        validate_credentials_dict(creds_dict)
-        return creds_dict
+        creds = json.loads(decoded)
+        if creds.get('type') == 'service_account':
+            return creds
     except Exception as e:
-        raise ValueError(f"Failed to parse valid credentials after multiple attempts: {str(e)}")
-
-try:
-    print("Attempting to load Google credentials...")
-    creds_dict = load_google_credentials()
-    print("Successfully parsed and validated credentials")
+        print(f"Base64 decode error: {str(e)}")
     
-    print("Initializing Google Sheets client...")
-    creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
-    client = gspread.authorize(creds)
-    print("Successfully authorized with Google Sheets API")
+    # If we get here, all attempts failed
+    raise ValueError(
+        "Invalid credentials format. Must be either:\n"
+        "1. Direct JSON service account credentials, or\n"
+        "2. Base64 encoded version of those credentials\n"
+        "Ensure your credentials include 'type': 'service_account'"
+    )
 
+# Initialize Google Sheets client
+try:
+    print("Initializing Google Sheets client...")
+    creds_dict = get_google_credentials()
+    credentials = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+    client = gspread.authorize(credentials)
+    print("Successfully authenticated with Google Sheets API")
+    
+    # Store worksheet references
+    sheet = client.open_by_key("1hyoQZpD17tsTjSh1XqgAUvfZ4Nt3kwV7zxphosruXeE").worksheet("Sheet1")
+    sheet1 = client.open_by_key("1hyoQZpD17tsTjSh1XqgAUvfZ4Nt3kwV7zxphosruXeE").worksheet("leave")
+    # Add other worksheet references as needed
+    
 except Exception as e:
     print(f"FATAL ERROR: {str(e)}")
-    print("Please verify your GOOGLE_SHEETS_CREDENTIALS_JSON environment variable")
-    print("It should contain either:")
-    print("1. The full contents of your service account JSON file, or")
-    print("2. A base64 encoded version of that file")
+    # In production, you might want to implement a retry mechanism
     raise
 
-# Rest of your application code...
+# Debug endpoint to verify credentials
+@app.route('/verify-creds')
+def verify_creds():
+    try:
+        return jsonify({
+            "status": "success",
+            "message": "Google Sheets authentication working",
+            "first_sheet_data": sheet.get_all_records()[0] if sheet else "No data"
+        })
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
+
+# [Rest of your existing routes and functions remain exactly the same]
 
 # Helper functions
 # Helper functions (unchanged)
