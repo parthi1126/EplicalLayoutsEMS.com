@@ -1,23 +1,11 @@
 import os
-import time
 import json
 import base64
-from io import BytesIO
-from flask import Flask, render_template, url_for, request, redirect, flash, session, jsonify
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-from datetime import datetime
-from functools import wraps
-from googleapiclient.discovery import build
-from googleapiclient.http import MediaFileUpload
-from werkzeug.utils import secure_filename
-import pyotp
-import qrcode
-from authlib.integrations.flask_client import OAuth
+from flask import Flask
 
-# Initialize Flask app
 app = Flask(__name__)
-app.secret_key = 'epical-layouts-muvi-2025'
 
 # Google Sheets Setup
 scope = [
@@ -26,66 +14,51 @@ scope = [
     "https://www.googleapis.com/auth/spreadsheets"
 ]
 
-# Robust Google Service Account JSON loading
 def load_google_credentials():
     credentials_json = os.environ.get("GOOGLE_SHEETS_CREDENTIALS_JSON")
     
     if not credentials_json:
         raise ValueError("GOOGLE_SHEETS_CREDENTIALS_JSON environment variable not set")
     
-    # First try to parse as direct JSON
+    # Try direct JSON parsing first
     try:
-        creds_dict = json.loads(credentials_json)
-        print("Successfully parsed credentials as direct JSON")
-        return ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
-    except json.JSONDecodeError as e:
-        print(f"Not valid direct JSON, trying base64: {str(e)}")
+        return json.loads(credentials_json)
+    except json.JSONDecodeError:
         pass
     
-    # If direct JSON fails, try base64 decoding
+    # Try cleaning the string (remove newlines, extra spaces)
     try:
-        # Ensure proper padding for base64
-        credentials_json = credentials_json.strip()
+        cleaned = credentials_json.strip().replace('\n', '').replace(' ', '')
+        return json.loads(cleaned)
+    except json.JSONDecodeError:
+        pass
+    
+    # Try base64 decoding
+    try:
+        # Add padding if needed
         padding = len(credentials_json) % 4
         if padding:
             credentials_json += '=' * (4 - padding)
-        
         decoded = base64.b64decode(credentials_json).decode('utf-8')
-        creds_dict = json.loads(decoded)
-        print("Successfully decoded base64 credentials")
-        return ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+        return json.loads(decoded)
     except Exception as e:
-        raise ValueError(f"Failed to parse credentials (tried both direct JSON and base64): {str(e)}")
+        raise ValueError(f"Failed to parse credentials after multiple attempts: {str(e)}")
 
-# Initialize client with error handling
 try:
-    creds = load_google_credentials()
-    client = gspread.authorize(creds)
+    print("Attempting to load Google credentials...")
+    creds_dict = load_google_credentials()
+    print("Successfully parsed credentials")
+    
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+    client = gspread.authorize(cres)
     print("Successfully authorized with Google Sheets API")
+
 except Exception as e:
-    print(f"FATAL ERROR initializing Google Sheets client: {str(e)}")
-    # In production, you might want to handle this more gracefully
+    print(f"FATAL ERROR: {str(e)}")
+    # For production, you might want to implement a retry mechanism or graceful shutdown
     raise
 
-# Worksheet references (unchanged)
-sheet = client.open_by_key("1hyoQZpD17tsTjSh1XqgAUvfZ4Nt3kwV7zxphosruXeE").worksheet("Sheet1")
-sheet1 = client.open_by_key("1hyoQZpD17tsTjSh1XqgAUvfZ4Nt3kwV7zxphosruXeE").worksheet("leave")
-sheet2 = client.open_by_key("1hyoQZpD17tsTjSh1XqgAUvfZ4Nt3kwV7zxphosruXeE").worksheet("holiday")
-sheet3 = client.open_by_key("1hyoQZpD17tsTjSh1XqgAUvfZ4Nt3kwV7zxphosruXeE").worksheet("admindashboard")
-sheet4 = client.open_by_key("1hyoQZpD17tsTjSh1XqgAUvfZ4Nt3kwV7zxphosruXeE").worksheet("loginsheet")
-sheet5 = client.open_by_key("1hyoQZpD17tsTjSh1XqgAUvfZ4Nt3kwV7zxphosruXeE").worksheet("timesheet")
-sheet6 = client.open_by_key("1hyoQZpD17tsTjSh1XqgAUvfZ4Nt3kwV7zxphosruXeE").worksheet("holiday")
-payslip_sheet = client.open_by_key("1hyoQZpD17tsTjSh1XqgAUvfZ4Nt3kwV7zxphosruXeE").worksheet("payslip")
-
-# Payslip configuration (unchanged)
-DRIVE_FOLDER_ID = '1LxAduaN9nkj0lNLokC6fwn7Oe7fSXszD'
-UPLOAD_FOLDER = 'temp_uploads'
-ALLOWED_EXTENSIONS = {'pdf'}
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
-
-# [REST OF YOUR ORIGINAL CODE FOLLOWS EXACTLY AS IT WAS]
-# All your existing routes, helper functions, etc. remain unchanged
+# Rest of your application code remains exactly the same...
 
 # Helper functions
 # Helper functions (unchanged)
