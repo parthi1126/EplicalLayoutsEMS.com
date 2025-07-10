@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Employee</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='addemployee.css') }}">
+</head>
+<body>
+    <div class="form-container">
+        <div class="form-header">
+            <h1><i class="fas fa-user-plus"></i> Add New Employee</h1>
+            <p>Fill in the details below to register a new employee</p>
+        </div>
+        
+        <form action="{{ url_for('addemployee') }}" method="POST">
+        {% if error %}
+        <p style="color: red; font-weight: 500; margin-bottom: 10px;">{{ error }}</p>
+        {% endif %}
+        
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="name">Full Name <span class="required">*</span></label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-user"></i>
+                        <input type="text" name="name" id="name" required placeholder="Alice Johnson">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address <span class="required">*</span></label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" name="Email" id="email" required placeholder="alice.johnson@company.com">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Phone Number <span class="required">*</span></label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-phone"></i>
+                        <input type="tel" id="phone" name="phone" placeholder="9876543210"  required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="address">Address <span class="required">*</span></label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <input type="text" id="address" name="address" required placeholder="123 Main St, City, State">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="empid">Employee ID <span class="required">*</span></label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-id-card"></i>
+                        <input type="text" id="empid" name="EmployeeId" required placeholder="EMP001">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="designation">Designation <span class="required">*</span></label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-briefcase"></i>
+                        <input type="text" id="designation" name="Designation" required placeholder="Software Developer">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="department">Department <span class="required">*</span></label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-building"></i>
+                        <input type="text" id="department" name="Department" required placeholder="IT">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="joining">Joining Date <span class="required">*</span></label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                        <input type="date" name="JoiningDate" id="joining" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="empType">Employment Type <span class="required">*</span></label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-clock"></i>
+                        <select id="empType" name="EmploymentType" required>
+                            <option value="" disabled selected>Select type</option>
+                            <option value="Full-time">Full-time</option>
+                            <option value="Part-time">Part-time</option>
+                            <option value="Contract">Contract</option>
+                            <option value="Intern">Intern</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="role">Role <span class="required">*</span></label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-user-tag"></i>
+                        <select id="role" name="Role" required>
+                            <option value="" disabled selected>Select role</option>
+                            <option value="Employee">Employee</option>
+                            <option value="Manager">Manager</option>
+                            <option value="Admin">Admin</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="salary">Salary<span class="required">*</span></label>
+                    <div class="input-with-icon">
+                        <i class="fa-solid fa-money-bill"></i>
+                        <input type="number" name="salary" id="salary" required placeholder="130000" min="0" step="1000">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="dob">Date Of Birth<span class="required">*</span></label>
+                    <div class="input-with-icon">
+                        <i class="fa-solid fa-cake-candles"></i>
+                        <input type="date" name="dob" id="dob" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="gender">Gender <span class="required">*</span></label>
+                    <div class="input-with-icon">
+                       <i class="fa-solid fa-person"></i>
+                        <select id="gender" name="gender" required>
+                            <option value="" disabled selected>Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Others">Prefer not to say</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password <span class="required">*</span></label>
+                    <div class="input-with-icon">
+                        <i class="fa-solid fa-user-lock"></i>
+                        <input type="password" name="password" id="password" required placeholder="password" minlength="8">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-user-plus"></i> Add Employee
+                </button></a>
+                <a href="{{ url_for('showemployee') }}" class="back-btn">
+                    <i class="{{ url_for('showemployee') }}"></i> Back to Home
+                </a>
+            </div>
+        </form>
+    </div>
+
+    
+
+</body>
+</html>

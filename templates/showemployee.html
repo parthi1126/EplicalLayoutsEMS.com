@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Employees</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='showemployee.css') }}">
+  </head>
+  <body>
+    <div class="navbar">
+      <div id="option">
+            <i class="fa-solid fa-bars" onclick=menu()></i>
+        </div>
+        <div class="name">
+            <img src="{{ url_for('static', filename='epical.png') }}" heigh="30" width="50px">
+            <nav>
+                <h1>Epical Layout</h1>
+                <p>Admin Portal</p>
+            </nav>
+        </div>
+        <div class="nav-elements">
+            
+            
+            <nav class="a" id="b">
+                <i class="bi bi-moon-fill"></i>
+            </nav>
+            <nav class="a" id="c" style="margin-right: 30px;">
+                <i class="fas fa-user-circle" id="user-icon"></i>
+            </nav>
+        </div>
+    </div>
+        <div id="side-bar">
+      <a href="{{ url_for('admindashboard') }}">
+        <ul>
+        <i class="fa-solid fa-house"></i><p>Dashboard</p>
+        </ul></a>
+      <a href="{{ url_for('timeadmin') }}"><ul>
+          <i class="fa-regular fa-clock"></i><p>Timesheet</p>
+      </ul></a>
+      <a href="{{ url_for('leave_ad') }}"><ul>
+        <i class="fa-solid fa-user-pen"></i><p>Leave Management</p>
+      </ul></a>
+      <a href="{{ url_for('publicholiday') }}"><ul>
+        <i class="fa-regular fa-calendar"></i><p>Holiday Planner</p>
+      </ul></a>
+      <a href="{{ url_for('showemployee') }}"><ul>
+        <i class="fa-regular fa-user"></i><p>Employee</p>
+      </ul></a>
+      <p>Quick-Actions</p>
+      <a href=""><ul>
+        <i class="fa-solid fa-flask"></i><p>Lab</p>
+      </ul></a>
+      <a href="{{ url_for('payslipad') }}"><ul>
+        <i class="fa-solid fa-upload"></i><p>Upload Payslip</p>
+      </ul></a>
+      <a href=""><ul>
+        <i class="fa-solid fa-id-card"></i><p>Upload Documents</p>
+      </ul></a>
+    </div>
+    </div>
+    <div class="left">
+      <div class="box">
+        <div class="display">
+        <div class="Search-add">
+          <div class="text">
+            <h2>Employees</h2>
+            <p>You can view the Employees</p>
+          </div>
+          <nav class="in">
+            <i class="fa fa-search"></i>
+            <input type="text" placeholder="Search by name or ID..." id="employeeSearch">
+          </nav>
+        </div>
+
+          <a href="{{ url_for('addemployee') }}"><div class="addemp">
+            <!--linked-->
+            <p>+ Add Employee</p><br>
+            </div>
+          </div></a>
+        </div>
+        <p class="success-add"> Employee added successfully <sup><i class="fa-solid fa-xmark"></i></sup> </p>
+        <p class="success-edit"> Employee edited successfully <sup><i class="fa-solid fa-xmark"></i></sup> </p>
+        <p class="success-delete"> Employee deleted successfully <sup><i class="fa-solid fa-xmark"></i></sup> </p>
+          <table id="employeeTable">
+
+            <thead>
+              <tr>
+                <th>S.No</th>
+                <th>EmployeeId</th>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Employee Type</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+ 
+              {% for i in range(1, datas|length) %}
+              <tr>
+                <td class="bold">{{ i}}</td>
+                <td class="bold">
+                  <p>{{ datas[i][4] }}</p>
+                </td>
+                <td class="duration"><strong>{{ datas[i][0] }}</strong></td>
+                <td class="Status">
+                  <p class="blocked">Active</p>
+                </td>
+                <td class="bold"><p>{{ datas[i][8] }}</p></td>
+                <td class="button"> <a class="edit" href="{{ url_for('updateemployee', id=i) }}"><i class="fa-solid fa-pencil"></i> Edit</a>
+                <p class="block" data-id="{{ i }}" onclick="block(event, '{{ i }}')">
+
+                  <i class="fas fa-ban"></i> Block
+                </p>
+                <a class="delete" href="{{ url_for('delete', id=i) }}" onclick="return confirm('Delete this employee?')">
+                  <i class="fa-solid fa-trash"></i> Delete
+                </a>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+      </div>
+      <div class="profile-popup" id="profilePopup">
+            <div class="close-popup" id="closePopup">
+                <i class="fas fa-times"></i>
+            </div>
+            <div class="profile-header">
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" class="profile-pic" alt="Profile">
+                <h3>John Doe</h3>
+                <p>Software Engineer</p>
+            </div>
+            <div class="profile-body">
+                <div class="profile-info">
+                    <h4>Email</h4>
+                    <p>john.doe@company.com</p>
+                </div>
+                <div class="profile-info">
+                    <h4>Employee ID</h4>
+                    <p>EMP-2048</p>
+                </div>
+                <div class="profile-info">
+                    <h4>Department</h4>
+                    <p>Engineering - IT</p>
+                </div>
+                <div class="profile-info">
+                    <h4>Join Date</h4>
+                    <p>March 15, 2020</p>
+                </div>
+            </div>
+            <div class="profile-footer">
+                    <button class="profile-btn view-profile">View Full Profile</button>
+                    <button class="profile-btn logout">Log Out</button>
+            </div>
+        </div>
+      
+    </div>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const userIcon = document.getElementById('user-icon');
+        const profilePopup = document.getElementById('profilePopup');
+        const closePopup = document.getElementById('closePopup');
+        
+        userIcon.addEventListener('click', function(e) {
+            e.stopPropagation();
+            profilePopup.style.display = profilePopup.style.display === 'block' ? 'none' : 'block';
+        });
+        
+        closePopup.addEventListener('click', function() {
+            profilePopup.style.display = 'none';
+        });
+        
+        document.addEventListener('click', function(e) {
+            if (!profilePopup.contains(e.target) && e.target !== userIcon) {
+                profilePopup.style.display = 'none';
+            }
+        });
+
+        // ✅ LIVE SEARCH FUNCTIONALITY — this must be here, not inside any other function
+        document.getElementById('employeeSearch').addEventListener('input', function () {
+          const filter = this.value.toLowerCase();
+          const rows = document.querySelectorAll("#employeeTable tbody tr");
+
+          rows.forEach(row => {
+            const text = row.innerText.toLowerCase();
+            row.style.display = text.includes(filter) ? '' : 'none';
+          });
+        });
+      });
+
+      // ✅ Block/Unblock logic
+      function block(event, id) {
+        event.preventDefault();
+        const blockBtn = event.target.closest('.block');
+        const row = blockBtn.closest('tr');
+        const statusElement = row.querySelector('.blocked');
+
+        fetch(`/block_employee/${id}`, {
+            method: 'POST',
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const isBlocked = data.new_status === "Blocked";
+                statusElement.innerText = isBlocked ? "Blocked" : "Active";
+                blockBtn.innerHTML = isBlocked
+                    ? '<i class="fas fa-unlock"></i> Unblock'
+                    : '<i class="fas fa-ban"></i> Block';
+                blockBtn.style.backgroundColor = isBlocked ? "#2ecc71" : "#dc143c";
+            } else {
+                alert("Failed to update status.");
+            }
+        })
+        .catch(err => {
+            console.error("Error:", err);
+            alert("Error blocking employee.");
+        });
+      }
+    </script>
+    <script src="{{ url_for('static', filename='scrpt/showemployee.js') }}">
+      
+    </script>
+    <script src="{{ url_for('static', filename='scrpt/dark.js') }}"></script>
+
+
+  </body>
+  </html>

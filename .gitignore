@@ -1,0 +1,26 @@
+# 🔐 Google Credentials - DO NOT TRACK
+service_account.json
+client_secrets.json
+
+# 🧪 Environment file
+.env
+
+# 🐍 Python compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 📦 Virtual environment
+env/
+venv/
+
+# 🪵 Logs
+*.log
+
+# 💻 OS-specific
+.DS_Store
+Thumbs.db
+
+# 🔧 VS Code settings (optional)
+.vscode/

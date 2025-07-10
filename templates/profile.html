@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Profile | Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</head>
+<style>
+   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap');
+*{
+    padding:0;
+    margin:0;
+    box-sizing: border-box;
+    font-family: 'Poppins','sans-serif';
+}
+h1 {
+  margin-bottom: 0px; 
+}
+a{
+  color: inherit;
+  text-decoration: none;
+  display: inline-block;
+}
+p {
+  margin-top: 0;
+}
+.navbar{
+    display:flex;
+    justify-content: space-between;
+    background-color:rgba(255, 255, 255, 0.8);
+    color: black;
+    margin: 5px;
+    margin-top: 0px;
+    width:100%;
+    transition: color 0.3s ease;
+    text-decoration: none;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+    position: fixed;
+}
+.nav-elements{
+    display:flex;
+    padding: 20px;
+}
+.nav-elements nav{
+    justify-content: space-around;
+    margin-left:60px;
+}
+.name{
+    display:flex;
+    margin:10px;
+}
+.name nav{
+    margin-left: 10px;
+}
+nav input{
+    border: none;
+    background-color: transparent;
+}
+.in{
+   border-style: solid;
+    border-radius: 40px;
+    height: 40px;
+    width: 225px;
+    
+}
+nav i{
+    margin-top:10px;
+    margin-left:20px;
+}
+.a i{
+    font-size: 20px;
+}
+
+input:focus{
+  outline: none;
+}
+nav i:hover{
+    cursor: pointer;
+}
+#b{
+    padding: 5px;
+}
+#side-bar{
+    width:270px;
+    display:flex;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    flex-direction: column;
+    margin:5px;
+    margin-top: 80px;
+    padding:10px;
+    height:650px;
+    justify-content: space-around;
+    position:fixed
+}
+#side-bar ul i{
+    margin-left:5px;
+    margin-right:20px;
+}
+#side-bar ul{
+    padding: 10px;
+}
+#side-bar p{
+    display:inline-block;
+}
+#side-bar ul:hover{
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.2); 
+}
+.mess h1{
+    display:inline-block;
+}
+.profile-popup {
+            display: none;
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            width: 350px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            z-index: 1000;
+            overflow: hidden;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .profile-header {
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .profile-pic {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 4px solid white;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+        
+        .profile-body {
+            padding: 20px;
+        }
+        
+        .profile-info {
+            margin-bottom: 15px;
+        }
+        
+        .profile-info h4 {
+            color: #3498db;
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+        
+        .profile-info p {
+            color: #555;
+            font-size: 14px;
+        }
+        
+        .profile-footer {
+            border-top: 1px solid #eee;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .profile-btn {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .view-profile {
+            background: #3498db;
+            color: white;
+            border: none;
+        }
+        
+        .logout {
+            background: none;
+            border: 1px solid #e74c3c;
+            color: #e74c3c;
+        }
+        
+        .profile-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .close-popup {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: white;
+            cursor: pointer;
+            background: rgba(0,0,0,0.2);
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+    
+.left{
+    margin-left:270px;
+    padding-left:20px;
+    padding-top: 20px;
+    width:1250px;
+}
+    
+    .img-text {
+        margin-top: 40px;
+        display: flex;
+        gap: 40px;
+        background-color: #fff;
+        border-radius: 16px;
+        padding: 30px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+    }
+    
+    .img {
+        width: 400px;
+        padding: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .img img {
+        height: 300px;
+        width: 300px;
+        border-radius: 16px;
+        object-fit: cover;
+        border: 8px solid #f0f5ff;
+        box-shadow: 0 0px 0px rgba(52, 152, 219, 0.1);
+    }
+    
+    .txt {
+        flex: 1;
+        padding: 40px 30px;
+        border-radius: 16px;
+        font-size: 1rem;
+        margin-left: 0;
+    }
+    
+    .txt h1 {
+        font-size: 2.2rem;
+        color: #2c3e50;
+        margin-bottom: 10px;
+    }
+    
+    .txt p {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 8px;
+    }
+    
+    .txt b {
+        color: #2c3e50;
+        font-weight: 600;
+    }
+    
+    .but {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+    }
+    
+    .abut, .bbut {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .abut {
+        background-color: #3498db;
+        color: white;
+        width: auto;
+    }
+    
+    .bbut {
+        background-color: #2ecc71;
+        color: white;
+        width: auto;
+    }
+    
+    .abut:hover {
+        background-color: #2980b9;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+    }
+    
+    .bbut:hover {
+        background-color: #27ae60;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(46, 204, 113, 0.3);
+    }
+    #option{
+        padding: 10px;
+        margin:10px;
+        display: none;
+    }
+    .empd{
+        padding: 10px;
+        margin-top: 10px;
+    }
+    .float{
+        margin: 10;
+        margin-top:10px;
+        display: flex;
+        gap: 20px;
+    }
+   .email i{
+    font-size: 30px;
+    margin-top: 20px;
+   }
+   .email h3{
+    text-align: center;
+   }
+    .email{
+        width:240px;
+        height:140px;
+        text-align: center;
+        padding: 15px;
+        border-radius: 20px;
+        background-color:rgba(67, 97, 238, 0.2);
+    }
+    .widgets{
+        display: inline-block;
+        width:370px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+        margin: 10px;
+        padding: 20px;
+        padding-left: 10px;
+        border-radius: 30px;
+        margin-right: 10px;
+        gap: 20px;
+
+    }
+    .widgets h2{
+        text-align: center;
+    }
+    .widgets h3{
+        text-align: center;
+    }
+    .instructions{
+        display: flex;
+        gap:30px;
+        margin:10px;
+    }
+    .about{
+        padding: 10px;
+    }
+    .instruction-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        margin-top: 30px;
+        gap: 20px;
+    }
+    
+    .widgets {
+        flex: 1;
+        min-width: 300px;
+        max-width: 370px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+        padding: 25px;
+        border-radius: 16px;
+        background-color: white;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .widgets:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+    }
+    
+    .widgets h2 {
+        color: #2c3e50;
+        margin-bottom: 10px;
+        font-size: 1.4rem;
+    }
+    
+    .widgets hr {
+        border: 0;
+        height: 1px;
+        background: #e0e0e0;
+        margin: 15px 0;
+    }
+    
+    .skill-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .skill-tag {
+        background-color: #3498db;
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+    }
+    
+    .about-content {
+        line-height: 1.7;
+        color: #555;
+    }
+    
+    @media (max-width: 768px) {
+        .widgets {
+            min-width: 100%;
+        }
+    }
+    @media (max-width: 1200px) {
+        .img-text {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .img, .txt {
+            width: 100%;
+            margin-left: 0;
+        }
+        
+        .but {
+            justify-content: center;
+        }
+    }
+    
+    @media (max-width: 992px) {
+        #side-bar {
+            transform: translateX(-100%);
+            position: fixed;
+            height: 100vh;
+            margin-top: 0;
+            z-index: 90;
+            transition: transform 0.3s ease;
+        }
+        
+        #side-bar.active {
+            transform: translateX(0);
+        }
+        
+        #option {
+            display: block;
+        }
+        
+        .left {
+            margin-left: 0;
+            width: 100%;
+        }
+    }
+</style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body class="abc">
+    <div class="navbar">
+        <div id="option">
+            <i class="fa-solid fa-bars" onclick=menu()></i>
+        </div>
+        <div class="name">
+            <img src="../epical.png" heigh="30" width="50px">
+            <nav>
+                <h1>Epical Layout</h1>
+                <p>Employee Portal</p>
+            </nav>
+        </div>
+        <div class="nav-elements">
+            <nav class="in">
+                <i class="fa fa-search"></i>
+                <input type="text" placeholder="Search">
+            </nav>
+            <nav class="a" id="a">
+                <i class="fas fa-bell" height:70px></i>
+            </nav>
+            <nav class="a" id="b">
+                <i class="bi bi-moon-fill" onclick=dark()></i>
+            </nav>
+            <nav class="a" id="c">
+                <i class="fas fa-user-circle" id="user-icon"></i>   <!-- solid user circle -->
+            </nav>
+        </div>
+    </div>
+    </div>
+    </div>
+    <div id="side-bar">
+        <a href="{{ url_for('empdashboard') }}"><ul>
+            <i class="fa-solid fa-house"></i><p>Dashboard</p>
+        </ul></a>
+        <a href="{{ url_for('time_emp') }}"><ul>
+            <i class="fa-regular fa-clock"></i><p>Timesheet</p>
+        </ul></a>
+        <a href="{{ url_for('leave') }}"><ul>
+        <i class="fa-regular fa-calendar"></i><p>Leave Management</p>
+        </ul></a>
+        <a href=""><ul>
+        <i class="fa-regular fa-file"></i><p>Documents</p>
+        </ul></a>
+        <a href="{{ url_for('profile') }}"><ul>
+            <i class="fa-regular fa-user"></i><p>Profile</p>
+        </ul></a>
+        <p>Quick-Actions</p>
+        <a href=""><ul>
+            <i class="fa-solid fa-plus"></i><p>New Request</p>
+        </ul></a>
+        <a href="{{ url_for('employee_portal') }}"><ul>
+            <i class="fa-solid fa-download"></i><p>Download Payslip</p>
+        </ul></a>
+        <a href=""><ul>
+            <i class="fa-solid fa-upload"></i><p>Upload Documents</p>
+        </ul></a>
+    </div>
+    <div class="left">
+        <div class="img-text">
+            <div class="img">
+                <img src="../../../../../Pictures/Screenshots/Screenshot 2025-07-05 092914.png" alt="Employee Profile Picture">
+            </div>
+            <div class="txt">
+                <h1>John Doe</h1>
+                <p>Software Engineer</p>
+                <p><b>Engineering</b> <br>IT Department</p>
+                <p>Specializing in front-end development and user experience design with 5 years of industry experience.</p>
+                <br>
+                
+                <div class="but">
+                    <a href="#"><p class="abut"><i class="fa-solid fa-pen-to-square"></i> Edit Profile</p></a>
+                    <a href="#"><p class="bbut"><i class="fa-solid fa-message"></i> Send Message</p></a>
+                </div>
+            </div>
+        </div>
+        <p class="empd">Employee details</p>
+        <div class="float">
+            <div class="email">
+                <i class="fa-solid fa-id-card"></i>
+                <h3>Employee Id</h3>
+                <p>EMP302</p>
+            </div>
+            <div class="email">
+                <i class="fa-solid fa-envelope"></i>
+                <h3>E-mail</h3>
+                <p>employee1@epical.com</p>
+            </div>
+            <div class="email">
+                <i class="fa-solid fa-phone"></i>
+                <h3>Phone</h3>
+                <p>9080981678</p>
+            </div>
+            <div class="email">
+                <i class="fa-solid fa-envelope"></i>
+                <h3>Joining Date</h3>
+                <p>23/4/2025</p>
+            </div>
+            <div class="email">
+                <i class="fa-solid fa-envelope"></i>
+                <h3>Role</h3>
+                <p>Full Time</p>
+            </div>
+        </div>
+        <div class="instruction-container">
+            <div class="widgets">
+                <h2>Software Engineer</h2>
+                <p class="department">IT Department</p>
+                <hr>
+                <div class="about">
+                    <h3>About</h3>
+                    <p class="about-content">
+                        Full-stack developer with 5+ years of experience in building web applications.
+                        Specialized in JavaScript frameworks and cloud architecture. Passionate about
+                        creating efficient, scalable solutions with clean code and intuitive UX.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="widgets">
+                <h2>Technical Skills</h2>
+                <hr>
+                <div class="skill-container">
+                    <span class="skill-tag">Python</span>
+                    <span class="skill-tag">JavaScript</span>
+                    <span class="skill-tag">React</span>
+                    <span class="skill-tag">Node.js</span>
+                    <span class="skill-tag">AWS</span>
+                    <span class="skill-tag">SQL</span>
+                    <span class="skill-tag">Docker</span>
+                </div>
+            </div>
+            
+            <div class="widgets">
+                <h2>Recent Projects</h2>
+                <hr>
+                <div class="project">
+                    <h3>Employee Portal v2.0</h3>
+                    <p class="project-desc">
+                        Led the redesign of the internal employee portal, improving load times by 40%
+                        and user satisfaction scores by 35%.
+                    </p>
+                </div>
+                <div class="project">
+                    <h3>API Gateway</h3>
+                    <p class="project-desc">
+                        Developed a unified API gateway handling 500+ requests per second with 99.9% uptime.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="profile-popup" id="profilePopup">
+        <div class="close-popup" id="closePopup">
+            <i class="fas fa-times"></i>
+        </div>
+        <div class="profile-header">
+            <img src="https://randomuser.me/api/portraits/men/32.jpg" class="profile-pic" alt="Profile">
+            <h3>John Doe</h3>
+            <p>Software Engineer</p>
+        </div>
+        <div class="profile-body">
+            <div class="profile-info">
+                <h4>Email</h4>
+                <p>john.doe@company.com</p>
+            </div>
+            <div class="profile-info">
+                <h4>Employee ID</h4>
+                <p>EMP-2048</p>
+            </div>
+            <div class="profile-info">
+                <h4>Department</h4>
+                <p>Engineering - IT</p>
+            </div>
+            <div class="profile-info">
+                <h4>Join Date</h4>
+                <p>March 15, 2020</p>
+            </div>
+        </div>
+        <div class="profile-footer">
+            <a href="../profile/profile.html"><button class="profile-btn view-profile">View Full Profile</button></a>
+            <a href="../login/index.html"><button class="profile-btn logout">Log Out</button></a>
+        </div>
+    </div>
+    <script>
+        // Your existing menu and dark mode functions
+        function menu() {
+            const sidebar = document.getElementById('side-bar');
+            sidebar.classList.toggle('active');
+        }
+        
+        function dark() {
+            document.body.classList.toggle('dark-mode');
+        }
+        
+        // New profile popup functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const userIcon = document.getElementById('user-icon');
+            const profilePopup = document.getElementById('profilePopup');
+            const closePopup = document.getElementById('closePopup');
+            
+            // Toggle popup when user icon is clicked
+            userIcon.addEventListener('click', function(e) {
+                e.stopPropagation();
+                profilePopup.style.display = profilePopup.style.display === 'block' ? 'none' : 'block';
+            });
+            
+            // Close popup when close button is clicked
+            closePopup.addEventListener('click', function() {
+                profilePopup.style.display = 'none';
+            });
+            
+            // Close popup when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!profilePopup.contains(e.target) && e.target !== userIcon) {
+                    profilePopup.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

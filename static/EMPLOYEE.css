@@ -1,0 +1,358 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap');
+*{
+    padding:0;
+    margin:0;
+    box-sizing: border-box;
+    font-family: 'Poppins','sans-serif';
+}
+h1 {
+  margin-bottom: 0px; 
+}
+
+p {
+  margin-top: 0;
+}
+
+.navbar{
+    display:flex;
+    justify-content: space-between;
+    background-color:rgba(255, 255, 255, 0.8);
+    color: black;
+    margin: 5px;
+    width:100%;
+    transition: color 0.3s ease;
+    text-decoration: none;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+    position: fixed;
+}
+.nav-elements{
+    display:flex;
+    padding: 20px;
+}
+.nav-elements nav{
+    justify-content: space-around;
+    margin-left:60px;
+}
+.name{
+    display:flex;
+    margin:10px;
+}
+.name nav{
+    margin-left: 10px;
+}
+nav input{
+    border: none;
+    background-color: transparent;
+}
+.in{
+   border-style: solid;
+    border-radius: 40px;
+    height: 40px;
+    width: 225px;
+    
+}
+nav i{
+    margin-top:10px;
+    margin-left:20px;
+}
+.a i{
+    font-size: 20px;
+}
+
+input:focus{
+  outline: none;
+}
+nav i:hover{
+    cursor: pointer;
+}
+#b{
+    padding: 5px;
+}
+.side-bar{
+    width:270px;
+    display:flex;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    flex-direction: column;
+    margin:5px;
+    margin-top: 80px;
+    padding:10px;
+    height:640px;
+    justify-content: space-around;
+    position:fixed
+}
+.side-bar ul i{
+    margin-left:5px;
+    margin-right:20px;
+}
+.side-bar ul{
+    padding: 10px;
+}
+.side-bar p{
+    display:inline-block;
+}
+.side-bar ul:hover{
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.2); 
+}
+.mess h1{
+    display:inline-block;
+}
+.left{
+    margin-left:270px;
+    padding-left:20px;
+    padding-top: 20px;
+}
+.mess{   
+    width: 1200px;;
+    background-color: rgb(138, 43, 226);
+    color: white;
+    padding: 40px;
+    border-radius: 30px;
+    margin-top: 90px;
+}
+.mess p{
+    color: bisque;
+}
+#timer{
+    display: flex;  
+}
+.timer{
+    width:190px;
+    background-color: rgb(237, 241, 244);
+    padding: 15px;
+    margin:10px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    border-radius: 20px;
+    margin-top:15px;
+    color:  rgb(138, 43, 226);
+}
+.timer p{
+    display: inline-block;
+    margin: 10px;
+    color:  rgb(138, 43, 226);
+}
+.date{
+    width:190px;
+    background-color: rgb(237, 241, 244);
+    padding: 15px;
+    margin:10px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    border-radius: 20px;
+    margin-top:15px;
+    color:  rgb(138, 43, 226);
+}
+.date p{
+    display: inline-block;
+    margin: 10px;
+    margin-left: 15px;
+    color:  rgb(138, 43, 226);
+}
+.timer:hover{
+    cursor: pointer;
+}
+.date:hover{
+    cursor: pointer;
+}
+.float{
+    display: flex;
+    justify-content: space-evenly;
+}
+.today-hour p,.today-hour h1{
+    display:inline-block;
+
+}
+.today-hour{
+    padding: 30px;
+    margin: 15px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    border-radius: 25px;
+    width:470px;
+    transition: transform 0.3s ease;
+    height: 200px;
+}
+.col1 i{
+    display: inline-block;
+}
+.col2 i{
+    display: inline-block;
+}
+.col3 i{
+    display: inline-block;
+}
+.col4 i{
+    display: inline-block;
+}
+.leave-balance p,.leave-balance h1{
+    display:inline-block;
+
+}
+.leave-balance{
+    padding: 30px;
+    margin: 15px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    border-radius: 25px;
+    width:470px;
+    height: 200px;
+}
+.active-projects p,.active-projects h1{
+    display:inline-block;
+
+}
+.active-projects{
+    padding: 30px;
+    margin: 15px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    border-radius: 25px;
+    width:470px;
+    height: 200px;
+}
+.Performance p,.Performance h1{
+    display:inline-block;
+
+}
+.Performance{
+    padding: 30px;
+    margin: 15px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    border-radius: 25px;
+    width:470px;
+    height: 200px;
+}
+.today-hour h1 i,.col1{
+    color: rgb(34, 139, 34);
+
+}
+.leave-balance h1 i{
+    color: rgb(138, 43, 226);
+    padding: 10px;
+    width: 50px;
+    height: 50px;
+    border-radius: 30px;
+    background-color: rgba(138, 43,226, 0.3);
+
+}
+.col2{
+    color: rgb(138, 43, 226);
+
+}
+.active-projects h1 i{
+    color: rgb(255, 140, 0);
+    padding: 10px;
+    width: 50px;
+    height: 50px;
+    border-radius: 30px;
+    background-color:rgba(255, 165, 0, 0.3);
+}
+.col3{
+    color: rgb(255, 140, 0);
+}
+.Performance h1 i{
+    color: rgb(255, 165, 0);
+    padding: 10px;
+    width: 50px;
+    height: 50px;
+    border-radius: 30px;
+    background-color:rgba(255, 165, 0, 0.3);
+
+}
+.col4{
+    color: rgb(255, 165, 0);
+}
+.today-hour h1 i{
+    padding: 10px;
+    width: 50px;
+    height: 50px;
+    border-radius: 30px;
+    background-color:rgba(34, 139, 34,0.3);
+};
+.widgets h1,.widgets p,.widgets h3{
+    display: inline-block;
+}
+.widgets{
+    display: flex;
+}
+.Tentries{
+    display:flex;
+    padding: 30px;
+    margin: 10px;
+    justify-content: space-between;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+.Entries{
+    margin: 10px;
+    width:800px;
+    padding:10px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+
+}
+.leavesum{
+    padding: 25px;
+    margin:15px;
+    width:350px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    height: 400px;
+}
+.Tentries li{
+    display: inline-block;
+}
+.Tentry-1{
+    display: flex;
+}
+.Tentry-2{
+    display: flex;
+}
+.Tentry-3{
+    display: flex;
+}
+progress {
+  width: 200px;
+  height: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+progress::-webkit-progress-bar {
+  background-color: #eee;
+  border-radius: 5px;
+}
+
+progress::-webkit-progress-value {
+  background-color: #2a62ff; /* blue color */
+  border-radius: 5px;
+}
+.CLP{
+    display: flex;
+    justify-content: space-between;
+
+}
+.CL{
+    padding: 10px;
+}
+.SLP{
+    display: flex;
+    justify-content: space-between;
+
+}
+.SL{
+    padding: 10px;
+}
+.ELP{
+    display: flex;
+    justify-content: space-between;
+
+}
+.EL{
+    padding: 10px;
+}
+.abs{
+    padding: 10px;
+    border: 0.3px solid black;
+    width:180px;
+    margin-left: 30px;
+}
+.abs:hover{
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.2); 
+}

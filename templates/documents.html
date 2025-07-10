@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="documents.css">
+</head>
+<body>
+<body class="abc">
+    <div class="navbar">
+        <div id="option">
+            <i class="fa-solid fa-bars" onclick=menu()></i>
+        </div>
+        <div class="name">
+            <img src="../epical.png" heigh="30" width="50px">
+            <nav>
+                <h1>Epical Layout</h1>
+                <p>Employee Portal</p>
+            </nav>
+        </div>
+        <div class="nav-elements">
+            <nav class="a" id="b">
+                <i class="bi bi-moon-fill" onclick=dark()></i>
+            </nav>
+            <nav class="a" id="c">
+                <i class="fas fa-user-circle" id="user-icon"></i>   <!-- solid user circle -->
+            </nav>
+        </div>
+    </div>
+    <div id="side-bar">
+        <a href="../emp-Dashboard/dashboard.html"><ul>
+            <i class="fa-solid fa-house"></i><p>Dashboard</p>
+        </ul></a>
+        <a href="../timesheet-emp/time-emp.html"><ul>
+            <i class="fa-regular fa-clock"></i><p>Timesheet</p>
+        </ul></a>
+         <a href="../leavemanagement-emp/leave.html"><ul>
+           <i class="fa-regular fa-calendar"></i><p>Leave Management</p>
+        </ul></a>
+        <a href="../leavemanagement-emp/leave.html"><ul>
+           <i class="fa-regular fa-file"></i><p>Documents</p>
+        </ul></a>
+        <a href="../profile/profile.html"><ul>
+            <i class="fa-regular fa-user"></i><p>Profile</p>
+        </ul></a>
+        <p>Quick-Actions</p>
+        <a href="#"><ul>
+            <i class="fa-solid fa-plus"></i><p>New Request</p>
+        </ul></a>
+        <a href="#"><ul>
+            <i class="fa-solid fa-download"></i><p>Download Payslip</p>
+        </ul></a>
+        <a href="#"><ul>
+            <i class="fa-solid fa-upload"></i><p>Upload Documents</p>
+        </ul>
+    </div>
+    <div class="left">
+
+        <!-- Header -->
+        <div class="header">
+            <h1>Document Portal</h1>
+            <p style="color: var(--subtext); margin-top: 4px;">Submit, track and receive your official documents</p>
+        </div>
+
+        <!-- Content -->
+        <div class="container">
+
+            <!-- 1. Document Requests -->
+            <div class="card">
+            <h2>📄 Document Requests</h2>
+            <div class="request-list">
+                <div class="request-item">
+                <span>Bonafide Certificate</span>
+                <button class="add-btn" onclick="addRequest('Bonafide Certificate')">➕ Add</button>
+                </div>
+                <div class="request-item">
+                <span>IT Filing Certificate</span>
+                <button class="add-btn" onclick="addRequest('IT Filing Certificate')">➕ Add</button>
+                </div>
+                <div class="request-item">
+                <span>Experience Letter</span>
+                <button class="add-btn" onclick="addRequest('Experience Letter')">➕ Add</button>
+                </div>
+                <div class="request-item">
+                <span>Salary Certificate</span>
+                <button class="add-btn" onclick="addRequest('Salary Certificate')">➕ Add</button>
+                </div>
+            </div>
+            </div>
+
+            <!-- 2. My Requests with Search -->
+            <div class="card">
+            <h2>📋 My Requests</h2>
+            <input type="text" class="search-bar" placeholder="Search requests..." onkeyup="filterTable(this.value)" />
+            <table>
+                <thead>
+                <tr>
+                    <th>Document</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody id="requestTableBody">
+                <!-- JS inserts rows -->
+                </tbody>
+            </table>
+            </div>
+
+            <!-- 3. Received Documents -->
+            <div class="card">
+            <h2>📥 Received Documents</h2>
+            <div class="received-grid">
+                <div class="received-card">
+                <div class="doc-title">Payslip - June 2024.pdf</div>
+                <div class="doc-meta">Received: 05 July 2024</div>
+                <div class="doc-actions">
+                    <span>⬇️ Download</span>
+                    <span>🗑️ Remove</span>
+                </div>
+                </div>
+                <div class="received-card">
+                <div class="doc-title">Bonafide Certificate.pdf</div>
+                <div class="doc-meta">Received: 03 July 2024</div>
+                <div class="doc-actions">
+                    <span>⬇️ Download</span>
+                    <span>🗑️ Remove</span>
+                </div>
+                </div>
+                <div class="received-card">
+                <div class="doc-title">Experience Letter.pdf</div>
+                <div class="doc-meta">Received: 01 July 2024</div>
+                <div class="doc-actions">
+                    <span>⬇️ Download</span>
+                    <span>🗑️ Remove</span>
+                </div>
+                </div>
+            </div>
+            </div>
+
+        </div>
+    </div>
+  <!-- JavaScript -->
+  <script src="documents.js">
+  </script>
+</body>
+</html>

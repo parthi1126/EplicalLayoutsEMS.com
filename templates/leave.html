@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leave Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='leave.css') }}">
+</head>
+<body class="abc">
+    <div class="navbar">
+        <div id="option">
+            <i class="fa-solid fa-bars" onclick=menu()></i>
+        </div>
+        <div class="name">
+            <img src="{{ url_for('static', filename='/epical.png')}}" heigh="30" width="50px">
+            <nav>
+                <h1>Epical Layout</h1>
+                <p>Employee Portal</p>
+            </nav>
+        </div>
+        <div class="nav-elements">
+            <nav class="in">
+                <i class="fa fa-search"></i>
+                <input type="text" placeholder="Search">
+            </nav>
+            <nav class="a" id="a">
+                <i class="fas fa-bell" height:70px></i>
+            </nav>
+            <nav class="a" id="b">
+                <i class="bi bi-moon-fill" onclick=dark()></i>
+            </nav>
+            <nav class="a" id="c">
+                <i class="fas fa-user-circle" id="user-icon"></i> 
+            </nav>
+        </div>
+    </div>
+     </div>
+    <div id="side-bar">
+        <a href="{{ url_for('empdashboard') }}"><ul>
+            <i class="fa-solid fa-house"></i><p>Dashboard</p>
+        </ul></a>
+        <a href="{{ url_for('time_emp') }}"><ul>
+            <i class="fa-regular fa-clock"></i><p>Timesheet</p>
+        </ul></a>
+        <a href="{{ url_for('leave') }}"><ul>
+        <i class="fa-regular fa-calendar"></i><p>Leave Management</p>
+        </ul></a>
+        <a href=""><ul>
+        <i class="fa-regular fa-file"></i><p>Documents</p>
+        </ul></a>
+        <a href="{{ url_for('profile') }}"><ul>
+            <i class="fa-regular fa-user"></i><p>Profile</p>
+        </ul></a>
+        <p>Quick-Actions</p>
+        <a href=""><ul>
+            <i class="fa-solid fa-plus"></i><p>New Request</p>
+        </ul></a>
+        <a href="{{ url_for('employee_portal') }}"><ul>
+            <i class="fa-solid fa-download"></i><p>Download Payslip</p>
+        </ul></a>
+        <a href=""><ul>
+            <i class="fa-solid fa-upload"></i><p>Upload Documents</p>
+        </ul></a>
+    </div>
+    <div class="left">
+        <div class="leavemanagement">
+            <div class="para">
+                <h1>Leave Management</h1><br>
+                <p>Apply for leave and track your balance</p>
+            </div>
+            <div class="apply" onclick=applyleave()>
+                <i class="fa-solid fa-plus"> </i>Apply For Leave
+            </div>
+        </div>
+        <div class="float">
+            <div class="CL">
+                <h2><i class="fa-solid fa-mug-hot" style="color: green;"></i> <h2>  Casual Leave</h2>
+                <div class="cent">
+                    <h1>4</h1><br></div>
+                <p >out of 12 days</p>
+                <progress value="33" max="100"></progress>
+            </div>
+            <div class="SL">
+                <h2><i class="fa-solid fa-syringe"></i> Sick Leave</h2>
+                <div class="cent">
+                    <h1>8</h1><br></div>
+                    <p>out of 12 days</p>
+                <progress value="67" max="100"></progress>
+            </div>
+            <div class="EL">
+                <h2><i class="fa-solid fa-award"></i>  Earned Leave</h2>
+                <div class="cent">
+                    <h1>6</h1><br></div>
+                    <p>out of 12 days</p>
+                <progress value="50" max="100"></progress>
+            </div>
+        </div>
+        <div class="recententries">
+  <h2>Leave Requests</h2>
+  <p>Your recent leave applications</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Date Range</th>
+        <th>Days</th>
+        <th>Reason</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for i in range(2, leaves|length) %}
+      <tr>
+        <td class="bold" id="border">{{ leaves[i][1] }}</td>
+        <td class="bold">{{ leaves[i][2] }} → {{ leaves[i][3] }}
+        </td>
+        <td>{{ leaves[i][4] }}</td>
+        <td class="duration"><strong>{{ leaves[i][5] }}</strong></td>
+        <td
+        class="{% if leaves[i][6] == 'Accepted' %}approved
+                {% elif leaves[i][6] == 'Rejected' %}rejected
+                {% else %}pending{% endif %}">
+        <i class="fa-solid 
+                {% if leaves[i][6] == 'Accepted' %}fa-check
+                {% elif leaves[i][6] == 'Rejected' %}fa-xmark
+                {% else %}fa-spinner{% endif %}">
+        </i> {{ leaves[i][6] }}
+        </td>
+        <td><i class="fa-regular fa-eye view-icon"></i></td>
+      </tr>
+      {% endfor %}
+    </tbody></table>
+    <div class="calendar-container">
+        <div class="calendar-header">
+            <div class="month-nav">
+                <button class="nav-btn" id="prevMonth">←</button>
+                <div class="month-title" id="monthYear">July 2023</div>
+                <button class="nav-btn" id="nextMonth">→</button>
+            </div>
+        </div>
+
+        <div class="calendar-grid" id="calendar">
+            <!-- Day headers -->
+            <div class="day-header">Sun</div>
+            <div class="day-header">Mon</div>
+            <div class="day-header">Tue</div>
+            <div class="day-header">Wed</div>
+            <div class="day-header">Thu</div>
+            <div class="day-header">Fri</div>
+            <div class="day-header">Sat</div>
+            
+            <!-- Calendar days will be inserted here by JavaScript -->
+        </div>
+        
+        <h2>Public Holidays</h2>
+        <table class="holidays-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Holiday Name</th>
+                </tr>
+            </thead>
+            <tbody id="holidaysTableBody">
+                <!-- Holidays will be inserted here -->
+            </tbody>
+        </table>
+
+        </div>
+        <div class="profile-popup" id="profilePopup">
+        <div class="close-popup" id="closePopup">
+            <i class="fas fa-times"></i>
+        </div>
+        <div class="profile-header">
+            <img src="https://randomuser.me/api/portraits/men/32.jpg" class="profile-pic" alt="Profile">
+            <h3>John Doe</h3>
+            <p>Software Engineer</p>
+        </div>
+        <div class="profile-body">
+            <div class="profile-info">
+                <h4>Email</h4>
+                <p>john.doe@company.com</p>
+            </div>
+            <div class="profile-info">
+                <h4>Employee ID</h4>
+                <p>EMP-2048</p>
+            </div>
+            <div class="profile-info">
+                <h4>Department</h4>
+                <p>Engineering - IT</p>
+            </div>
+            <div class="profile-info">
+                <h4>Join Date</h4>
+                <p>March 15, 2020</p>
+            </div>
+        </div>
+        <div class="profile-footer">
+            <a href="../profile/profile.html"><button class="profile-btn view-profile">View Full Profile</button></a>
+            <a href="../login/index.html"><button class="profile-btn logout">Log Out</button></a>
+        </div>
+    </div>
+        </div>
+    </div>
+    <div class="leave-popup-overlay">
+    <div class="leave-application-container">
+        <form action="{{ url_for('submit_leave_form') }}" method="POST">
+        <h1 class="leave-popup-title">Apply for Leave</h1>
+
+        <label class="leave-date-label">From date</label>
+        <input type="date" name="frmdt" class="leave-date-input" required>
+
+        <label class="leave-date-label">To Date</label>
+        <input type="date" name="todt" class="leave-date-input" required>
+
+        <p class="leave-description-label">Leave Type</p>
+        <select class="leave-description-input" name="type" required>
+            <option value="" disabled selected>--Select Type--</option>
+            <option value="Casual Leave">Casual Leave</option>
+            <option value="Sick Leave">Sick Leave</option>
+            <option value="Earned Leave">Earned Leave</option>
+        </select>
+
+        <p class="leave-description-label">Description</p>
+        <input type="text" name="description" class="leave-description-input" required>
+
+        <div class="leave-action-buttons">
+            <button class="leave-submit-btn" type="submit">Submit</button>
+            <button class="leave-cancel-btn" type="button">Cancel</button>
+        </div>
+        </form>
+    </div>
+    </div>
+    </body>
+    <script src="{{ url_for('static', filename='leave.js') }}"></script>
+    <script>
+        // Calendar functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            let currentDate = new Date();
+            const holidays = [
+                { name: "New Year's Day", date: new Date(currentDate.getFullYear(), 0, 1) },
+                { name: "Independence Day", date: new Date(currentDate.getFullYear(), 6, 4) },
+                { name: "Christmas Day", date: new Date(currentDate.getFullYear(), 11, 25) },
+            ];
+            
+            renderCalendar(currentDate, holidays);
+            
+            document.getElementById('prevMonth').addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() - 1);
+                renderCalendar(currentDate, holidays);
+            });
+            
+            document.getElementById('nextMonth').addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() + 1);
+                renderCalendar(currentDate, holidays);
+            });
+
+            // Initialize leave popup functionality
+            const applyBtn = document.querySelector('.apply');
+            const leavePopup = document.querySelector('.leave-popup-overlay');
+            const cancelBtn = document.querySelector('.leave-cancel-btn');
+            
+            applyBtn.addEventListener('click', function() {
+                leavePopup.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            });
+            
+            cancelBtn.addEventListener('click', function() {
+                leavePopup.style.display = 'none';
+                document.body.style.overflow = '';
+            });
+            
+            leavePopup.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    leavePopup.style.display = 'none';
+                    document.body.style.overflow = '';
+                }
+            });
+        });
+
+        function renderCalendar(date, holidays) {
+            const monthYear = document.getElementById('monthYear');
+            const calendarGrid = document.getElementById('calendar');
+            const holidaysTable = document.getElementById('holidaysTableBody');
+            
+            // Clear existing days (keeping day headers)
+            while (calendarGrid.children.length > 7) {
+                calendarGrid.removeChild(calendarGrid.lastChild);
+            }
+            
+            // Set month/year title
+            monthYear.textContent = new Intl.DateTimeFormat('en-US', { 
+                month: 'long', 
+                year: 'numeric' 
+            }).format(date);
+            
+            // Get first day of month and total days
+            const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+            const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+            const daysInMonth = lastDay.getDate();
+            const startingDay = firstDay.getDay();
+            
+            // Add empty cells for days before first day of month
+            for (let i = 0; i < startingDay; i++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day other-month';
+                calendarGrid.appendChild(dayElement);
+            }
+            
+            // Add days of month
+            const today = new Date();
+            for (let i = 1; i <= daysInMonth; i++) {
+                const dayElement = document.createElement('div');
+                const dayDate = new Date(date.getFullYear(), date.getMonth(), i);
+                
+                dayElement.className = 'calendar-day';
+                if (i === today.getDate() && date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear()) {
+                    dayElement.classList.add('current-day');
+                }
+                
+                dayElement.innerHTML = `<div class="day-number">${i}</div>`;
+                
+                // Check if this day is a holiday
+                const dayHolidays = holidays.filter(holiday => 
+                    holiday.date.getDate() === i &&
+                    holiday.date.getMonth() === date.getMonth() &&
+                    holiday.date.getFullYear() === date.getFullYear()
+                );
+                
+                if (dayHolidays.length > 0) {
+                    dayElement.innerHTML += `<div class="holiday-marker"></div>`;
+                    dayHolidays.forEach(holiday => {
+                        dayElement.innerHTML += `<div class="holiday-event">${holiday.name}</div>`;
+                    });
+                }
+                
+                calendarGrid.appendChild(dayElement);
+            }
+            
+            // Filter holidays for current month only
+            const currentMonthHolidays = holidays.filter(holiday => 
+                holiday.date.getMonth() === date.getMonth() &&
+                holiday.date.getFullYear() === date.getFullYear()
+            );
+            
+            // Populate holidays table
+            holidaysTable.innerHTML = '';
+            currentMonthHolidays.forEach(holiday => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${holiday.date.getDate()} ${new Intl.DateTimeFormat('en-US', { month: 'short' }).format(holiday.date)}</td>
+                    <td>${holiday.name}</td>
+                `;
+                holidaysTable.appendChild(row);
+            });
+            
+            if (currentMonthHolidays.length === 0) {
+                holidaysTable.innerHTML = '<tr><td colspan="2">No holidays this month</td></tr>';
+            }
+        }
+    </script>
+</body>
+</html>

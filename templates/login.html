@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M.U.V.I - Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+        }
+
+        body, html {
+        height: 100%;
+        background: url("{{ url_for('static', filename='abc.jpeg') }}") no-repeat center center fixed;
+        background-size: cover;
+        }
+
+        .container {
+        display: flex;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0);
+        color: white;
+        flex-wrap: wrap;
+        }
+
+        .left, .right {
+        flex: 1;
+        min-width: 300px;
+        padding: 60px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        }
+        .left{
+        padding-top: 35px;
+        margin-top: 45px;
+        width:500px
+        }
+        .left h1 {
+        font-size: 48px;
+        }
+
+        .left p {
+        max-width: 400px;
+        line-height: 1.5;
+        margin-bottom: 20px;
+        }
+
+        .social-icons a {
+        margin-right: 15px;
+        display: inline-block;
+        }
+
+        .right {
+            padding: 10px;
+            font-size: 20px;
+            margin-left: 30px;
+        }
+
+        .right h2 {
+        margin-bottom: 20px;
+        }
+
+        form label {
+        display: block;
+        margin-top: 15px;
+        margin-bottom: 5px;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+        width: 70%;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        }
+        input:focus{
+        outline:none;
+        box-shadow: none;
+        border: none;
+        }
+        .checkbox-row {
+        display: flex;
+        align-items: center;
+        margin: 15px 0;
+        }
+
+        button {
+        background-color: #f04e30;
+        border: none;
+        color: white;
+        padding: 10px 10px;
+        cursor: pointer;
+        border-radius: 4px;
+        margin-top: 15px;
+        width:120px;
+        }
+
+        .forgot {
+        display: block;
+        margin-top: 10px;
+        color: #ccc;
+        text-decoration: none;
+
+        }
+
+        .terms {
+        margin-top: 20px;
+        font-size: 12px;
+        color: #ccc;
+        }
+
+        .terms a {
+        color: #ccc;
+        text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+        .container {
+            flex-direction: column;
+        }
+        .left, .right {
+            padding: 40px 20px;
+        }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left">
+            <h1 style="font-size:50px;">Precison in Every M<span style="color: red;">ic</span>ron</h1>
+            <h1 style="font-size:40px;">Innovation in Every <span> Design</span></h1>
+            <p >Where Data Meets Precision <br> Where Data Meets Intelligence <br>Where Data Meets Innovation</p> 
+            <div class="social-icons">
+                <a href="#"><img src="https://cdn-icons-png.flaticon.com/24/733/733547.png" alt="Facebook" /></a>
+                <a href="https://www.linkedin.com/company/epical-layouts-private-limited/?originalSubdomain=in"><img src="https://cdn-icons-png.flaticon.com/24/174/174857.png" alt="LinkedIn" /></a>
+                <a href="#"><img src="https://cdn-icons-png.flaticon.com/24/2111/2111463.png" alt="Instagram" /></a>
+                <a href="#"><img src="https://cdn-icons-png.flaticon.com/24/1384/1384060.png" alt="YouTube" /></a>
+                <a href="https://www.epicallayouts.com/home"><img src="https://cdn-icons-png.flaticon.com/24/545/545682.png" alt="Website" /></a>
+                </div>
+            </div>
+
+        <div class="right">
+            <h2 style="margin-left: 150px;font-size:43px;"> Sign in</h2>    
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                
+                <!-- CORRECTED FORM ACTION -->
+                <form action="{{ url_for('login') }}" method="POST" id="loginForm">
+                    <label for="email">Email Address</label>
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input type="email" id="email" name="email" placeholder="your@email.com" required>
+                    <label for="password">Password</label>
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" id="password" name="password" placeholder="••••••••" required><br>
+                    <button type="submit" class="btn" style="padding: 10px;margin-left: 25px;">Login</button>
+                </form>
+            <div class="acc" style="margin-top:10px; padding:5px;margin-left: 20px;">
+                Need an account? <br><a target="_blank" href="https://mail.google.com/mail/?view=cm&fs=1&to=nedeshkumarm.aids2023@citchennai.net&su=Access%20Request%20to%20Employee%20Portal&body=Dear%20HR%20Team,%0A%0AI%20am%20requesting%20access%20to%20the%20employee%20portal.%0A%0A-%20Full%20Name:%0A-%20Employee%20ID:%0A-%20Email:%0A-%20Department:%0A%0AThanks%20and%20Regards,%0A[Your%20Name]" style="margin-top: 10px; padding-top: 10px; color: inherit;">Contact Admin</a>
+            </div>
+    </div>
+
+        </div>
+    </div>
+</body>
+</html>

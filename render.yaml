@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: employee-management-system
+    env: python
+    plan: free
+    buildCommand: ""  # Optional: use if you need custom build
+    startCommand: gunicorn app:app
+    autoDeploy: true
+
+    envVars:
+      - key: FLASK_ENV
+        value: production
+
+      # Google Sheets Credentials (as a JSON string, set this in Render Dashboard > Environment)
+      - key: GOOGLE_SHEETS_CREDENTIALS_JSON
+        sync: false  # Secret key, not shown in GitHub
+
+      # Google OAuth Client Secret (also as JSON string)
+      - key: CLIENT_SECRET_JSON
+        sync: false
+
+      # Redirect URI for OAuth flow (match this with Google Cloud Console)
+      - key: OAUTH_REDIRECT_URI
+        value: https://employee-management-system.onrender.com/oauth2callback

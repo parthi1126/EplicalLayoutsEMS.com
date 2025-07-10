@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='empdashboard.css') }}">
+</head>
+<body class="abc">
+    <div class="navbar">
+        <div id="option">
+            <i class="fa-solid fa-bars" onclick=menu()></i>
+        </div>
+        <div class="name">
+            <img src="{{ url_for('static', filename='epical.png') }}" heigh="30" width="50px">
+            <nav>
+                <h1>Epical Layout</h1>
+                <p>Employee Portal</p>
+            </nav>
+        </div>
+        <div class="nav-elements">
+            <nav class="a" id="b">
+                <i class="bi bi-moon-fill" onclick=dark()></i>
+            </nav>
+            <nav class="a" id="c">
+                <i class="fas fa-user-circle" id="user-icon"></i>   <!-- solid user circle -->
+            </nav>
+        </div>
+    </div>
+    <div id="side-bar">
+        <a href="{{ url_for('empdashboard') }}"><ul>
+            <i class="fa-solid fa-house"></i><p>Dashboard</p>
+        </ul></a>
+        <a href="{{ url_for('time_emp') }}"><ul>
+            <i class="fa-regular fa-clock"></i><p>Timesheet</p>
+        </ul></a>
+        <a href="{{ url_for('leave') }}"><ul>
+        <i class="fa-regular fa-calendar"></i><p>Leave Management</p>
+        </ul></a>
+        <a href=""><ul>
+        <i class="fa-regular fa-file"></i><p>Documents</p>
+        </ul></a>
+        <a href="{{ url_for('profile') }}"><ul>
+            <i class="fa-regular fa-user"></i><p>Profile</p>
+        </ul></a>
+        <p>Quick-Actions</p>
+        <a href="{{ url_for('employee_portal') }}"><ul>
+            <i class="fa-solid fa-download"></i><p>Download Payslip</p>
+        </ul></a>
+    </div>
+    <div class="overlay" id="overlay"></div>
+    <div class="left">
+        <div class="mess">
+            <h1>Welcome back, {{ fullname }} !</h1><br>
+            <p>Here's your activity Summary for today</p>
+            <div class="info-cards">
+                <div class="info-card quote-card">
+                    <i class="fa-solid fa-quote-left icon"></i>
+                    <p class="label" style="color: #FBAE3C;">Quote of the Day</p>
+                    <p class="value" id="quote-text">Loading...</p>
+                </div>
+                <div class="info-card date-card">
+                    <i class="fa-regular fa-calendar icon"></i>
+                    <p class="label" label style="color:#FF8A65">Today</p>
+                    <p class="value" id="current-date">Loading...</p>
+                </div>
+            </div>
+        </div>
+        <div class="summary-grid">
+            <div class="card today-hour">
+                <p>Today's</p><br>
+                <p>Hours</p><br>
+                <h1>2h 46m  <i class="fa-regular fa-clock"></i></h1><br>
+                <div class="col1">
+                    <i class="fa-solid fa-arrow-trend-up"></i>+15min
+                </div>
+            </div>
+            <div class="card leave-balance">
+                <p>Leave</p><br>
+            </nav>  <p>Balance</p><br>
+                <h1>4 <i class="fa-regular fa-calendar"></i></h1><br>
+                <div class="col2">
+                    <i class="fa-regular fa-calendar"></i> Casual<br>days
+                </div>
+            </div>
+            <div class="card active-projects">
+                <p>Active</p><br>
+                <p>Projects</p><br>
+                <h1>3  <i class="fa-solid fa-suitcase"></i></h1><br>
+                <div class="col3">
+                    <i class="fa-solid fa-suitcase"></i> In Progress
+                </div>
+            </div>
+            <div class="card Performance">
+                <p>Performance</p><br>
+                <h1>94%  <i class="fa-solid fa-medal"></i><br></h1>
+                <div class="col4">
+                    <i class="fa-regular fa-star"></i> Excellance
+                </div>
+            </div>
+        </div>
+        <div class="widgets">
+            <div class="Entries">
+                <h1>Recent Timesheet Entries</h1><br>
+                <p>Your latesr work log entries</p>
+                <div class="Tentries">
+                    <div class="Tentry-1">
+                        <li><i class="fa-solid fa-circle" style="font-size: 10px; color: green; margin:10px;padding:10px"></i> </li>
+                        <ul><h3>UI/UX Review</h3>
+                        <p>Project Alpha-2024-08-15</p></ul>
+                    </div>
+                    <h3>8h 30m</h3>
+                </div>
+                <div class="Tentries">
+                    <div class="Tentry-2">
+                        <li><i class="fa-solid fa-circle" style="font-size: 10px; color: green; margin:10px;padding:10px"></i> </li>
+                        <div><h3>Machine Learning</h3>
+                        <p>Project XXX-2025-02-17</p></div>
+                    </div>
+                    <h3>10h 30m</h3>
+                </div>
+                <div class="Tentries">
+                    <div class="Tentry-3">
+                        <li><i class="fa-solid fa-circle" style="font-size: 10px; color: green; margin:10px;padding:10px"></i> </li>
+                        <ul><h3>Front-end development</h3>
+                        <p>Project Beta-2025-07-16</p></ul>
+                    </div>
+                    <h3>6h 45m</h3>
+                </div>
+            </div>
+            <div class="leavesum">
+                <h1>Leave Summary</h1>
+                <p>Your leave balance overview</p>
+                <div class="CL">
+                    <div class="CLP"><p>Casual Leave</p> <p>3/10</p></div>
+                    <progress value="30" max="100"></progress>
+                </div>
+                <div class="SL">
+                    <div class="SLP"><p>Sick Leave</p> <p>5/10</p></div>
+                    <progress value="50" max="100"></progress>
+                </div>
+                <div class="EL">
+                    <div class="ELP"><p>Earned Leave</p> <p>7/10</p></div>
+                    <progress value="70" max="100"></progress>
+                </div>
+            
+            </div>
+        </div>
+        <div class="profile-popup" id="profilePopup">
+            <div class="close-popup" id="closePopup">
+                <i class="fas fa-times"></i>
+            </div>
+            <div class="profile-header">
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" class="profile-pic" alt="Profile">
+                <h3>John Doe</h3>
+                <p>Software Engineer</p>
+            </div>
+            <div class="profile-body">
+                <div class="profile-info">
+                    <h4>Email</h4>
+                    <p>john.doe@company.com</p>
+                </div>
+                <div class="profile-info">
+                    <h4>Employee ID</h4>
+                    <p>EMP-2048</p>
+                </div>
+                <div class="profile-info">
+                    <h4>Department</h4>
+                    <p>Engineering - IT</p>
+                </div>
+                <div class="profile-info">
+                    <h4>Join Date</h4>
+                    <p>March 15, 2020</p>
+                </div>
+            </div>
+            <div class="profile-footer">
+                    <button class="profile-btn view-profile">View Full Profile</button>
+                    <button class="profile-btn logout">Log Out</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script src="{{ url_for('static', filename='scipt/empdashboard.js') }}"></script>
+<script src="{{ url_for('static', filename='scipt/darkemp.js') }}"></script>
+</html>
